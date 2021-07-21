@@ -11,5 +11,6 @@ public interface InterfaceBankDAO {
 	   public void displayinfo(String name);
 	   public void displaybalance(String accountnumber);
 	   public void displayall();
+	   public void addAlltoDatabase();
 	}
 

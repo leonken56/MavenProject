@@ -1,9 +1,20 @@
 import java.util.ArrayList;
+
 import java.util.List;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+
 
 public class ArrayListDAO implements InterfaceBankDAO {
 	ArrayList<Bank> ALLBANKUSER = new ArrayList();
-
+	static final String DB_URL = "jdbc:mysql://database-mysql.ck2jovupcm0u.us-east-2.rds.amazonaws.com/database1";
+	static final String USER = "admin";
+	static final String PASS = "testadmin";
+	static final String QUERY = "SELECT accountnumber, customername, email, phonenumber, balance FROM user";
+	
 	public ArrayList<Bank> getAllAccounts() {
 		// TODO Auto-generated method stub
 		return ALLBANKUSER;
@@ -80,5 +91,32 @@ public class ArrayListDAO implements InterfaceBankDAO {
 	    	x.printinfo();
 	      }
 		
+	}
+	public void addAlltoDatabase() {
+
+		 try(Connection conn = DriverManager.getConnection(DB_URL, USER, PASS);
+		         Statement stmt = conn.createStatement();
+		      ) {		      
+		         // Execute a query
+			 	System.out.println("Connected database successfully...");             
+		        String sql = "";
+		        
+		 		for (Bank x : ALLBANKUSER) {
+		 			
+		 			System.out.println("Inserting "+ x.getCustomername() +" into the table...");
+		 			sql = "INSERT INTO user (accountnumber,customername,phonenumber,email,balance) VALUES "
+		 					+ "('"+ x.getAccountnumber() +"','"+ x.getCustomername()+"','"+ x.getPhonenumber()+"','"+ x.getEmail() +"','"+x.getBalance()+"');";
+		 			
+		 			//System.out.println(sql);
+		 			stmt.executeUpdate(sql);
+		 			System.out.println("Inserted " + x.getAccountnumber() + " record into the table...");
+		 		}
+		 		
+		            	  
+		      } catch (SQLException e) {
+		         e.printStackTrace();
+		      } 
+		 
+
 	}
 }
